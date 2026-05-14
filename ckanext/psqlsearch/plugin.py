@@ -118,7 +118,11 @@ def _apply_text_search(
 def _apply_sort(
     query: Query[Any], data_dict: dict[str, Any], rank_column: Optional[Any]
 ) -> Query[Any]:
-    sort = data_dict.get("sort") or config.get("ckan.search.default_package_sort")
+    sort = (
+        data_dict.get("order_by")
+        or data_dict.get("sort")
+        or config.get("ckan.search.default_package_sort")
+    )
     sort = (sort or "metadata_modified desc").strip()
 
     if sort in {"rank", "score desc, metadata_modified desc", "score desc"}:
@@ -130,6 +134,7 @@ def _apply_sort(
         "metadata_modified": model.Package.metadata_modified,
         "metadata_created": model.Package.metadata_created,
         "title": model.Package.title,
+        "title_string": func.lower(func.coalesce(model.Package.title, model.Package.name)),
         "name": model.Package.name,
     }
 
@@ -678,7 +683,11 @@ def package_search(context: dict[str, Any], data_dict: dict[str, Any]) -> dict[s
         "count": total_count,
         "facets": {},
         "results": visible_results,
-        "sort": data_dict.get("sort") or config.get("ckan.search.default_package_sort"),
+        "sort": (
+            data_dict.get("order_by")
+            or data_dict.get("sort")
+            or config.get("ckan.search.default_package_sort")
+        ),
         "search_facets": {},
     }
 
