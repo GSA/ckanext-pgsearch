@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any, Iterable, Optional
 
+from flask import has_request_context, request
 from sqlalchemy import asc, cast, desc, func, or_, String
 from sqlalchemy.orm import Query
 
@@ -420,7 +421,18 @@ def package_search(context: dict[str, Any], data_dict: dict[str, Any]) -> dict[s
         search_results = item.after_dataset_search(search_results, data_dict)
     search_results.setdefault("search_facets", {})
     search_results.setdefault("facets", {})
+
+    if has_request_context() and request.path == "/api/action/package_search":
+        return {
+            "count": search_results["count"],
+            "results": search_results["results"],
+            "sort": search_results["sort"],
+        }
+
     return search_results
+
+
+package_search.side_effect_free = True
 
 
 def package_autocomplete(context: dict[str, Any], data_dict: dict[str, Any]) -> list[dict[str, Any]]:
