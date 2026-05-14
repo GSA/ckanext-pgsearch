@@ -1,0 +1,39 @@
+[project]
+name = "ckanext-psqlsearch"
+version = "0.0.1"
+description = ""
+readme = "README.md"
+authors = [
+    {name = "Fuhu Xia", email = "fxia@reisystems.com"}
+]
+license = {text = "AGPL"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+keywords = [ "CKAN", ]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/FuhuXia/ckanext-psqlsearch"
+
+[project.entry-points."ckan.plugins"]
+psqlsearch = "ckanext.psqlsearch.plugin:PsqlsearchPlugin"
+
+
+[build-system]
+requires = ["setuptools<82"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+        "ignore::sqlalchemy.exc.SADeprecationWarning",
+        "ignore::sqlalchemy.exc.SAWarning",
+        "ignore::DeprecationWarning",
+]
+addopts = "--ckan-ini test.ini"

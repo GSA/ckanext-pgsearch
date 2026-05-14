@@ -1,0 +1,14 @@
+# psqlsearch-js:
+#   filters: rjsmin
+#   output: ckanext-psqlsearch/%(version)s-psqlsearch.js
+#   contents:
+#     - js/psqlsearch.js
+#   extra:
+#     preload:
+#       - base/main
+
+# psqlsearch-css:
+#   filters: cssrewrite
+#   output: ckanext-psqlsearch/%(version)s-psqlsearch.css
+#   contents:
+#     - css/psqlsearch.css
