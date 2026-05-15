@@ -4,11 +4,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      # The CKAN version tag of the Solr and Postgres containers should match
-      # the one of the container the tests run on.
-      # You can switch this base image with a custom image tailored to your project
+      # Keep the CKAN core test container aligned with the service versions below.
       image: ckan/ckan-dev:2.11
     services:
+      # Solr is kept in CI because CKAN's core test bootstrap still expects the
+      # standard search stack even though this extension replaces runtime search
+      # behavior with PostgreSQL.
       solr:
         image: ckan/ckan-solr:2.11-solr9
       postgres:
@@ -31,18 +32,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install requirements
-      # Install any extra requirements your extension has here (dev requirements, other extensions etc)
       run: |
         pip install -r requirements.txt
         pip install -r dev-requirements.txt
         pip install -e .
     - name: Setup extension
-      # Extra initialization steps
       run: |
-        # Replace default path to CKAN core config file with the one on the container
+        # Point test.ini at the CKAN core config path inside the CI container.
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
 
         ckan -c test.ini db init
     - name: Run tests
       run: pytest --ckan-ini=test.ini --cov=ckanext.psqlsearch --disable-warnings ckanext/psqlsearch
-

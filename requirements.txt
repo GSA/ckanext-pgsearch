@@ -1,0 +1,3 @@
+# Runtime dependencies are provided by CKAN itself. Keep this file so
+# environment-specific additions can be installed consistently in CI and local
+# development.
