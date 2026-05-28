@@ -11,6 +11,7 @@ from sqlalchemy.orm import Query
 import ckan.model as model
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import ckan.authz as authz
 from ckan.common import config
 from ckan.lib import search
 import ckan.lib.search.common as search_common
@@ -157,7 +158,9 @@ def _apply_sort(
 
 
 def _iter_visible_results(
-    context: dict[str, Any], package_ids: Iterable[str], fl: Optional[list[str]] = None
+    context: dict[str, Any],
+    package_ids: Iterable[str],
+    fl: Optional[list[str]] = None,
 ) -> list[dict[str, Any]]:
     show_action = toolkit.get_action("package_show")
     results: list[dict[str, Any]] = []
@@ -251,14 +254,15 @@ def _apply_supported_filter_clauses(
         if field == "owner_org":
             group_ids = _resolve_group_ids(values)
             if group_ids:
-                query = query.filter(model.Package.owner_org.in_(group_ids))
+                query = query.filter(or_(*[model.Package.owner_org == group_id for group_id in group_ids]))
             else:
-                query = query.filter(model.Package.owner_org.in_(values))
+                query = query.filter(or_(*[model.Package.owner_org == value for value in values]))
             continue
 
         if field == "organization":
             group_ids = _resolve_group_ids(values)
-            query = query.filter(model.Package.owner_org.in_(group_ids or [""]))
+            org_values = group_ids or values
+            query = query.filter(or_(*[model.Package.owner_org == value for value in org_values]))
             continue
 
         if field == "groups":
@@ -335,6 +339,48 @@ def _group_dataset_counts(group_ids: list[str], *, is_org: bool) -> dict[str, in
         group_id: counts.get(group_id, 0)
         for group_id in group_ids
     }
+
+
+def _organization_dataset_counts(
+    groups: list[model.Group], context: dict[str, Any]
+) -> Optional[dict[str, int]]:
+    if not groups:
+        return {}
+
+    # CKAN can optionally grant access to private datasets through dataset
+    # collaborators, which is not cheaply representable in this page-level SQL
+    # optimization. In that case fall back to CKAN's per-organization logic.
+    if _asbool(config.get("ckan.auth.allow_dataset_collaborators")):
+        return None
+
+    user_name = context.get("user")
+    readable_private_org_ids = []
+    if user_name:
+        readable_private_org_ids = [
+            group.id
+            for group in groups
+            if authz.has_user_permission_for_group_or_org(group.id, user_name, "read")
+        ]
+
+    group_ids = [group.id for group in groups]
+    visibility_filter = model.Package.private.is_(False)
+    if readable_private_org_ids:
+        visibility_filter = or_(
+            model.Package.private.is_(False),
+            model.Package.owner_org.in_(readable_private_org_ids),
+        )
+
+    count_query = (
+        model.Session.query(model.Package.owner_org, func.count(model.Package.id))
+        .filter(model.Package.state == "active")
+        .filter(model.Package.type == "dataset")
+        .filter(model.Package.owner_org.in_(group_ids))
+        .filter(visibility_filter)
+        .group_by(model.Package.owner_org)
+    )
+
+    counts = {str(owner_org): count for owner_org, count in count_query.all()}
+    return {str(group.id): counts.get(str(group.id), 0) for group in groups}
 
 
 def _parse_group_sort(sort: str) -> tuple[str, str]:
@@ -447,10 +493,13 @@ def _group_or_org_list(
     include_datasets = _asbool(data_dict.get("include_datasets"))
     show_context = dict(context)
     if include_dataset_count and not include_datasets:
-        count_map = _group_dataset_counts([group.id for group in groups], is_org=is_org)
-        show_context["dataset_counts"] = {
-            "owner_org" if is_org else "groups": count_map,
-        }
+        if is_org:
+            count_map = _organization_dataset_counts(groups, context)
+            if count_map is not None:
+                show_context["dataset_counts"] = {"owner_org": count_map}
+        else:
+            count_map = _group_dataset_counts([group.id for group in groups], is_org=is_org)
+            show_context["dataset_counts"] = {"groups": count_map}
 
     action = toolkit.get_action("organization_show" if is_org else "group_show")
     group_list = []
