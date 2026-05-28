@@ -34,6 +34,23 @@ Compatibility with core CKAN versions:
 This extension depends on PostgreSQL full-text search. No Solr service is
 required for the search functionality implemented here.
 
+Removing Solr entirely may also need a CKAN core patch so CKAN does not fail
+during Solr schema checks while bootstrapping. For the GSA CKAN fork, see
+[GSA/ckan@1af1607](https://github.com/GSA/ckan/commit/1af1607e4f74fe4855b4ae4814c60fff1b2d199c),
+which makes `ckan.lib.search.check_solr_schema_version` return `False` when the
+Solr schema cannot be retrieved.
+
+CKAN still expects `ckan.solr_url` / `CKAN_SOLR_URL` to be configured in some
+startup paths, even when this extension handles search without Solr. In a
+Solr-free deployment, set it to a non-empty placeholder value such as:
+
+```bash
+export CKAN_SOLR_URL=http://placeholder-value.local
+```
+
+For an example deployment change, see
+[GSA/inventory-app@1ca7ed4](https://github.com/GSA/inventory-app/commit/1ca7ed4d6dc79ed7f5db8c5ea3ddac43d354bb90).
+
 ## Installation
 
 1. Activate your CKAN virtual environment.
