@@ -6,6 +6,9 @@ jobs:
     container:
       # Keep the CKAN core test container aligned with the service versions below.
       image: ckan/ckan-dev:2.11
+      # GitHub Actions mounts runner state under /__w/_temp. The CKAN image's
+      # default user cannot write there, which makes actions/checkout fail.
+      options: --user root
     services:
       # Solr is kept in CI because CKAN's core test bootstrap still expects the
       # standard search stack even though this extension replaces runtime search
