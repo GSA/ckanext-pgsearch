@@ -1,8 +1,8 @@
-[![Tests](https://github.com/FuhuXia/ckanext-psqlsearch/workflows/Tests/badge.svg?branch=main)](https://github.com/FuhuXia/ckanext-psqlsearch/actions)
+[![Tests](https://github.com/FuhuXia/ckanext-pgsearch/workflows/Tests/badge.svg?branch=main)](https://github.com/FuhuXia/ckanext-pgsearch/actions)
 
-# ckanext-psqlsearch
+# ckanext-pgsearch
 
-`ckanext-psqlsearch` is a CKAN search backend replacement that serves
+`ckanext-pgsearch` is a CKAN search backend replacement that serves
 `package_search`, autocomplete, and organization/group listing from PostgreSQL
 instead of Solr.
 
@@ -57,13 +57,13 @@ For an example deployment change, see
 2. Clone and install the extension:
 
 ```bash
-git clone https://github.com/FuhuXia/ckanext-psqlsearch.git
-cd ckanext-psqlsearch
+git clone https://github.com/FuhuXia/ckanext-pgsearch.git
+cd ckanext-pgsearch
 pip install -e .
 pip install -r requirements.txt
 ```
 
-3. Add `psqlsearch` to `ckan.plugins` in your CKAN config.
+3. Add `pgsearch` to `ckan.plugins` in your CKAN config.
 4. Restart CKAN.
 
 ## Known limitations
@@ -77,8 +77,8 @@ pip install -r requirements.txt
 ## Development
 
 ```bash
-git clone https://github.com/FuhuXia/ckanext-psqlsearch.git
-cd ckanext-psqlsearch
+git clone https://github.com/FuhuXia/ckanext-pgsearch.git
+cd ckanext-pgsearch
 pip install -e .
 pip install -r dev-requirements.txt
 ```
@@ -91,7 +91,7 @@ To run the same test flow locally that GitHub Actions uses:
 ./scripts/run-tests-docker.sh
 ```
 
-This uses [docker-compose.test.yml](/Users/fxia/git/ckanext-psqlsearch/docker-compose.test.yml)
+This uses [docker-compose.test.yml](/Users/fxia/git/ckanext-pgsearch/docker-compose.test.yml)
 to start the same CKAN, PostgreSQL, Redis, and Solr image set used in CI, then
 installs the extension and runs pytest inside `ckan/ckan-dev:2.11`.
 

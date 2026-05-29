@@ -1,0 +1,14 @@
+# pgsearch-js:
+#   filters: rjsmin
+#   output: ckanext-pgsearch/%(version)s-pgsearch.js
+#   contents:
+#     - js/pgsearch.js
+#   extra:
+#     preload:
+#       - base/main
+
+# pgsearch-css:
+#   filters: cssrewrite
+#   output: ckanext-pgsearch/%(version)s-pgsearch.css
+#   contents:
+#     - css/pgsearch.css

@@ -4,7 +4,7 @@ import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
 
 
-@pytest.mark.ckan_config("ckan.plugins", "psqlsearch")
+@pytest.mark.ckan_config("ckan.plugins", "pgsearch")
 @pytest.mark.usefixtures("clean_db", "with_plugins")
 class TestPackageSearchIntegration:
     def test_package_search_supports_q_all_sort_and_pagination(self):
@@ -95,7 +95,7 @@ class TestPackageSearchIntegration:
         assert result_by_name[title_match["name"]]["match_field"] == "title"
 
 
-@pytest.mark.ckan_config("ckan.plugins", "psqlsearch")
+@pytest.mark.ckan_config("ckan.plugins", "pgsearch")
 @pytest.mark.usefixtures("clean_db", "with_plugins")
 class TestOrganizationListIntegration:
     def test_organization_list_sorts_by_package_count(self):

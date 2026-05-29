@@ -25,7 +25,7 @@ services:
         pip install -e . &&
         sed -i -e 's|use = config:.*|use = config:/srv/app/src/ckan/test-core.ini|' test.ini &&
         ckan -c test.ini db init &&
-        pytest --ckan-ini=test.ini --cov=ckanext.psqlsearch --disable-warnings ckanext/psqlsearch
+        pytest --ckan-ini=test.ini --cov=ckanext.pgsearch --disable-warnings ckanext/pgsearch
       "
 
   solr:

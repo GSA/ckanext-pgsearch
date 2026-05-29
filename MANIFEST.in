@@ -1,6 +1,6 @@
 include README.md
 include LICENSE
 include requirements.txt
-recursive-include ckanext/psqlsearch *.html *.json *.js *.less *.css *.mo *.yml
-recursive-include ckanext/psqlsearch/migration *.ini *.py *.mako
-recursive-include ckanext/psqlsearch/public *.*
+recursive-include ckanext/pgsearch *.html *.json *.js *.less *.css *.mo *.yml
+recursive-include ckanext/pgsearch/migration *.ini *.py *.mako
+recursive-include ckanext/pgsearch/public *.*

@@ -812,14 +812,14 @@ organization_list.side_effect_free = True
 group_list.side_effect_free = True
 
 
-class PsqlsearchPlugin(plugins.SingletonPlugin):
+class PgsearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IActions)
 
     def update_config(self, config_: toolkit.CKANConfig) -> None:
         toolkit.add_template_directory(config_, "templates")
         toolkit.add_public_directory(config_, "public")
-        toolkit.add_resource("assets", "psqlsearch")
+        toolkit.add_resource("assets", "pgsearch")
 
         # CKAN wires synchronous indexing through ckan.lib.search.index_for().
         # Replace the package index backend with a no-op implementation so

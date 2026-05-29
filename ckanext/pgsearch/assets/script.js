@@ -1,4 +1,4 @@
-ckan.module("psqlsearch-module", function ($, _) {
+ckan.module("pgsearch-module", function ($, _) {
   "use strict";
   return {
     options: {

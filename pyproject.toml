@@ -1,5 +1,5 @@
 [project]
-name = "ckanext-psqlsearch"
+name = "ckanext-pgsearch"
 version = "0.0.1"
 description = "CKAN PostgreSQL-backed search backend replacement"
 readme = "README.md"
@@ -21,12 +21,12 @@ keywords = ["CKAN", "PostgreSQL", "search"]
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/FuhuXia/ckanext-psqlsearch"
-Repository = "https://github.com/FuhuXia/ckanext-psqlsearch"
-Issues = "https://github.com/FuhuXia/ckanext-psqlsearch/issues"
+Homepage = "https://github.com/FuhuXia/ckanext-pgsearch"
+Repository = "https://github.com/FuhuXia/ckanext-pgsearch"
+Issues = "https://github.com/FuhuXia/ckanext-pgsearch/issues"
 
 [project.entry-points."ckan.plugins"]
-psqlsearch = "ckanext.psqlsearch.plugin:PsqlsearchPlugin"
+pgsearch = "ckanext.pgsearch.plugin:PgsearchPlugin"
 
 
 [build-system]

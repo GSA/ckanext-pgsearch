@@ -5,17 +5,17 @@ from ckan.plugins import plugin_loaded
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-import ckanext.psqlsearch.plugin as plugin
+import ckanext.pgsearch.plugin as plugin
 
 
-@pytest.mark.ckan_config("ckan.plugins", "psqlsearch")
+@pytest.mark.ckan_config("ckan.plugins", "pgsearch")
 @pytest.mark.usefixtures("with_plugins")
 def test_plugin_loads():
-    assert plugin_loaded("psqlsearch")
+    assert plugin_loaded("pgsearch")
 
 
 def test_actions_are_registered():
-    actions = plugin.PsqlsearchPlugin().get_actions()
+    actions = plugin.PgsearchPlugin().get_actions()
 
     assert "package_search" in actions
     assert "package_autocomplete" in actions
