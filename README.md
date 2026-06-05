@@ -1,4 +1,4 @@
-[![Tests](https://github.com/FuhuXia/ckanext-pgsearch/workflows/Tests/badge.svg?branch=main)](https://github.com/FuhuXia/ckanext-pgsearch/actions)
+[![Tests](https://github.com/GSA/ckanext-pgsearch/workflows/Tests/badge.svg?branch=main)](https://github.com/GSA/ckanext-pgsearch/actions)
 
 # ckanext-pgsearch
 
@@ -49,7 +49,7 @@ export CKAN_SOLR_URL=http://placeholder-value.local
 ```
 
 For an example deployment change, see
-[GSA/inventory-app@1ca7ed4](https://github.com/GSA/inventory-app/commit/1ca7ed4d6dc79ed7f5db8c5ea3ddac43d354bb90).
+[GSA/inventory-app@60f0a23](https://github.com/GSA/inventory-app/commit/60f0a2395766668a04b1a8b90218606fb03d4209).
 
 ## Installation
 

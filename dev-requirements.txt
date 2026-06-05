@@ -1,1 +1,4 @@
 pytest-ckan
+
+# zipp introduced through pytest-ckan@0.0.12 is vulnerable
+zipp==3.19.1
