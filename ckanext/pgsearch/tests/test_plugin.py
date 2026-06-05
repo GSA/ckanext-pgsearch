@@ -38,6 +38,7 @@ def test_update_config_replaces_direct_package_index(monkeypatch):
 
     package_index = search.PackageSearchIndex()
     package_index.index_package({"id": "dataset-id"})
+    package_index.clear()
 
 
 @pytest.mark.parametrize("raw_query, expected", [

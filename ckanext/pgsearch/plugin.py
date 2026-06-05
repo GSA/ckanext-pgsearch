@@ -24,6 +24,9 @@ import ckan.logic.schema as logic_schema
 class NoopPackageSearchIndex(NoopSearchIndex):
     """No-op package index compatible with CKAN's direct package index API."""
 
+    def clear(self) -> None:
+        pass
+
     def insert_dict(self, pkg_dict: dict[str, Any]) -> None:
         pass
 
