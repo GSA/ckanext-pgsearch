@@ -15,9 +15,31 @@ import ckan.authz as authz
 from ckan.common import config
 from ckan.lib import search
 import ckan.lib.search.common as search_common
+import ckan.lib.search.index as search_index
 from ckan.lib.search.index import NoopSearchIndex
 from ckan.lib.search.query import SearchQuery
 import ckan.logic.schema as logic_schema
+
+
+class NoopPackageSearchIndex(NoopSearchIndex):
+    """No-op package index compatible with CKAN's direct package index API."""
+
+    def insert_dict(self, pkg_dict: dict[str, Any]) -> None:
+        pass
+
+    def update_dict(self, pkg_dict: dict[str, Any], defer_commit: bool = False) -> None:
+        pass
+
+    def remove_dict(self, pkg_dict: dict[str, Any]) -> None:
+        pass
+
+    def index_package(
+        self, pkg_dict: Optional[dict[str, Any]], defer_commit: bool = False
+    ) -> None:
+        pass
+
+    def delete_package(self, pkg_dict: dict[str, Any]) -> None:
+        pass
 
 
 def _asbool(value: Any, default: bool = False) -> bool:
@@ -824,7 +846,9 @@ class PgsearchPlugin(plugins.SingletonPlugin):
         # CKAN wires synchronous indexing through ckan.lib.search.index_for().
         # Replace the package index backend with a no-op implementation so
         # dataset writes do not require Solr to be available.
-        search._INDICES["package"] = NoopSearchIndex
+        search._INDICES["package"] = NoopPackageSearchIndex
+        search.PackageSearchIndex = NoopPackageSearchIndex
+        search_index.PackageSearchIndex = NoopPackageSearchIndex
         search._QUERIES["package"] = PostgresPackageSearchQuery
         search.PackageSearchQuery = PostgresPackageSearchQuery
         search_common.is_available = lambda: True

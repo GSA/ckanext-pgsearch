@@ -4,6 +4,8 @@ from types import SimpleNamespace
 from ckan.plugins import plugin_loaded
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+from ckan.lib import search
+import ckan.lib.search.index as search_index
 
 import ckanext.pgsearch.plugin as plugin
 
@@ -21,6 +23,21 @@ def test_actions_are_registered():
     assert "package_autocomplete" in actions
     assert "organization_list" in actions
     assert "group_list" in actions
+
+
+def test_update_config_replaces_direct_package_index(monkeypatch):
+    monkeypatch.setattr(toolkit, "add_template_directory", lambda config, path: None)
+    monkeypatch.setattr(toolkit, "add_public_directory", lambda config, path: None)
+    monkeypatch.setattr(toolkit, "add_resource", lambda path, name: None)
+
+    plugin.PgsearchPlugin().update_config({})
+
+    assert search._INDICES["package"] is plugin.NoopPackageSearchIndex
+    assert search.PackageSearchIndex is plugin.NoopPackageSearchIndex
+    assert search_index.PackageSearchIndex is plugin.NoopPackageSearchIndex
+
+    package_index = search.PackageSearchIndex()
+    package_index.index_package({"id": "dataset-id"})
 
 
 @pytest.mark.parametrize("raw_query, expected", [
